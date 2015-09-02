@@ -11,13 +11,50 @@
         <ul>
             <% for (var i = 0; i < items.length; i++) { %>
                 <li><%= items[i].desc %></li>
-            <% } %>
+                <li><%= items[i].fileID%></li>
+            <% } j = 0;%>
         </ul>
 
         <form action="/files" method="post">
-            <input type="text" name="fileName">
-            <input type="text" name="fileExtension">
+            <h3>POST /files</h3>
+            <label>File Name: </label><input type="text" name="fileName"><br>
+            <label>File Extension: </label><input type="text" name="fileExtension">
+            <input type="submit" value="POST">
+            <br><br>
+        </form>
+
+        <form id="getID" action="/files/" method="get">
+            <h3>GET /files</h3>
+            <label>File ID: </label><input type="text" id="fileID"/>
             <input type="submit">
+            <script>
+                var form = document.getElementById('getID'),
+                fileIdInput = document.getElementById('fileID'),
+                baseAction = form.getAttribute('action');
+
+                form.addEventListener('submit', function() {
+                    form.setAttribute('action', baseAction + fileIdInput.value);
+                    return true;
+                });
+            </script>
+            <br><br>
+        </form>
+
+        <form id="getData" action="/files/" method="get">
+            <h3>GET /files/{fileId}</h3>
+            <label>File ID: </label><input type="text" id="fileID2">
+            <input type="submit">
+            <script>
+                var form2 = document.getElementById('getData'),
+                        fileIdInput2 = document.getElementById('fileID2'),
+                        baseAction2 = form.getAttribute('action');
+
+                form2.addEventListener('submit', function() {
+                    form2.setAttribute('action', baseAction2 + fileIdInput2.value + '/data');
+                    return true;
+                });
+            </script>
+            <br><br>
         </form>
     </div>
     <script src="jquery/dist/jquery.js"></script>
