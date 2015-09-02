@@ -11,7 +11,7 @@ app.use(express.static(path.join(__dirname, 'bower_components')));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-app.use(require('./router'));
+app.use(require('./routers/router'));
 
 app.listen(18881, function() {
     console.log('ready on port 18881');
