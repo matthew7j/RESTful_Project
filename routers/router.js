@@ -15,6 +15,11 @@ var fileIDs = [
 router.post('/files', function (req, res) {
     // create random number to be used as the fileID
     var fileID = Math.floor(Math.random() * 100) + 1;
+    if (fileIDs.length > 0) {
+        while (fileIDs.fileID.contains(fileID)) {
+            fileID = Math.floor(Math.random() * 100) + 1;
+        }
+    }
 
     var fileName = req.body.fileName;
     var fileExtension = req.body.fileExtension;
@@ -42,24 +47,30 @@ router.post('/files', function (req, res) {
 
 router.get('/files/:fileID', function (req, res) {
     var fileID = req.params.fileID;
-    console.log(fileID);
     var indexOfFileID = -1;
-    for(var i = 0; i < fileIDs.length; i++) {
-        if(fileIDs[i].fileID == fileID) {
+    for (var i = 0; i < fileIDs.length; i++) {
+        if (fileIDs[i].fileID == fileID) {
             indexOfFileID = i;
         }
     }
-    fs.readFile(fileIDs[indexOfFileID].desc, 'utf8', function (err, data) {
-        if (err) {
-            console.log('Error: ' + err);
+    if (indexOfFileID != -1) {
+        fs.readFile(fileIDs[indexOfFileID].desc, 'utf8', function (err, data) {
+            if (err) {
+                console.log('Error: ' + err);
+                res.end();
+            }
+            var fileName = fileIDs[indexOfFileID].fileName;
+            var fileExtension = fileIDs[indexOfFileID].extension;
+            console.log("FILE NAME: " + fileName + "\nFILE EXTENSION: " + fileExtension);
+            res.write("FILE NAME: " + fileName + "\nFILE EXTENSION: " + fileExtension);
             res.end();
-        }
-        var fileName = fileIDs[indexOfFileID].fileName;
-        var fileExtension = fileIDs[indexOfFileID].extension;
-        console.log("FILE NAME: " + fileName + "\nFILE EXTENSION: " + fileExtension);
-        res.write("FILE NAME: " + fileName + "\nFILE EXTENSION: " + fileExtension);
+        });
+    }
+    else {
+        console.log("The provided FileID: " + fileID + " does not match any file.");
+        res.write("The provided FileID: " + fileID + " does not match any file.");
         res.end();
-    });
+    }
 });
 
 /** PUT request to upload the file data for the file created with the POST request above
@@ -94,7 +105,6 @@ router.put('/files/:fileID/data', function (req, res) {
  */
 
 router.get('/files/:fileID/data', function (req, res) {
-    console.log("im here");
     var indexOfFileID = -1;
 
     for(var i = 0; i < fileIDs.length; i++) {
@@ -113,7 +123,7 @@ router.get('/files/:fileID/data', function (req, res) {
 
 router.get('/', function (req, res) {
     res.render('index', {
-        title: 'My App',
+        title: 'RESTful API Project',
         items: fileIDs
     });
 });

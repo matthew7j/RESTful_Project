@@ -10,8 +10,7 @@
         <h1><%= title %></h1>
         <ul>
             <% for (var i = 0; i < items.length; i++) { %>
-                <li><%= items[i].desc %></li>
-                <li><%= items[i].fileID%></li>
+                <li>File Path: <%= items[i].desc %> <br>FileID: <%= items[i].fileID%></li>
             <% } j = 0;%>
         </ul>
 
@@ -24,7 +23,7 @@
         </form>
 
         <form id="getID" action="/files/" method="get">
-            <h3>GET /files</h3>
+            <h3>GET /files/{fileID}</h3>
             <label>File ID: </label><input type="text" id="fileID"/>
             <input type="submit">
             <script>
@@ -41,7 +40,7 @@
         </form>
 
         <form id="getData" action="/files/" method="get">
-            <h3>GET /files/{fileId}</h3>
+            <h3>GET /files/{fileId}/data</h3>
             <label>File ID: </label><input type="text" id="fileID2">
             <input type="submit">
             <script>
