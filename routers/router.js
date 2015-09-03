@@ -15,11 +15,6 @@ var fileIDs = [
 router.post('/files', function (req, res) {
     // create random number to be used as the fileID
     var fileID = Math.floor(Math.random() * 100) + 1;
-    if (fileIDs.length > 0) {
-        while (fileIDs.fileID.contains(fileID)) {
-            fileID = Math.floor(Math.random() * 100) + 1;
-        }
-    }
 
     var fileName = req.body.fileName;
     var fileExtension = req.body.fileExtension;
@@ -106,19 +101,27 @@ router.put('/files/:fileID/data', function (req, res) {
 
 router.get('/files/:fileID/data', function (req, res) {
     var indexOfFileID = -1;
+    var fileID = req.params.fileID;
 
-    for(var i = 0; i < fileIDs.length; i++) {
-        if(fileIDs[i].fileID == req.params.fileID) {
+    for (var i = 0; i < fileIDs.length; i++) {
+        if (fileIDs[i].fileID == fileID) {
             indexOfFileID = i;
         }
     }
-    var fileName = fileIDs[indexOfFileID].fileName;
-    var fileExtension = fileIDs[indexOfFileID].extension;
-    var file = fs.readFileSync(fileName + fileExtension);
-    var json = JSON.stringify(JSON.parse(file));
-    res.setHeader('Content-Type', 'application/json')
-    res.send(json);
-    res.end();
+    if (indexOfFileID != -1) {
+        var fileName = fileIDs[indexOfFileID].fileName;
+        var fileExtension = fileIDs[indexOfFileID].extension;
+        var file = fs.readFileSync(fileName + fileExtension);
+        var json = JSON.stringify(JSON.parse(file));
+        res.setHeader('Content-Type', 'application/json');
+        res.send(json);
+        res.end();
+    }
+    else {
+        console.log("The provided FileID: " + fileID + " does not match any file.");
+        res.write("The provided FileID: " + fileID + " does not match any file.");
+        res.end();
+    }
 });
 
 router.get('/', function (req, res) {
